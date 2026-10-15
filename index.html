@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Material Contadoor</title>
+<meta name="description" content="Tu material Contadoor, directo por WhatsApp." />
+<meta name="robots" content="noindex" />
+<meta name="theme-color" content="#0C070E" />
+<!--
+  Mini-sitio "Material por WhatsApp".
+  Llega gente desde Instagram (comenta una palabra → ManyChat → este enlace).
+  Una sola página para todos los materiales:  ?m=gastos-pyme
+  Cada material se define abajo, en MATERIALES (titulo, video, wa_mensaje).
+  El número de WhatsApp es el mismo para todos (WA_NUMERO).
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --carbon:#0C070E; --purple:#924893; --gradA:#803889; --gradB:#A4599C;
+    --purpleLight:#C77BC9; --ink:#F3E9F4; --inkDim:#C9A8CC; --white:#fff;
+    --grad:linear-gradient(160deg,var(--gradB),var(--gradA));
+  }
+  *{box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent;}
+  html{-webkit-text-size-adjust:100%; overscroll-behavior:none;}
+  html,body{background:var(--carbon); overflow-x:hidden;}
+  body{font-family:'Inter',system-ui,sans-serif; color:var(--ink); min-height:100dvh;
+    display:flex; flex-direction:column; align-items:center; position:relative;
+    -webkit-font-smoothing:antialiased;}
+  a{touch-action:manipulation;}
+  :focus-visible{outline:2px solid var(--purpleLight); outline-offset:3px; border-radius:8px;}
+
+  /* Fondo: degradado suave a pantalla completa */
+  .bg{position:fixed; inset:0; z-index:0; pointer-events:none;
+    background:radial-gradient(90% 50% at 50% 0%, #241029 0%, #160a1a 45%, #0C070E 100%);}
+  /* Barras + círculo de las portadas, CONTENIDOS en la columna (máx. 480px) */
+  .deco{position:fixed; top:0; bottom:0; left:50%; transform:translateX(-50%); width:100%; max-width:480px;
+    overflow:hidden; z-index:0; pointer-events:none;}
+  .bars{position:absolute; display:flex; gap:24px; transform:rotate(18deg); opacity:.18;}
+  .bars span{width:46px; border-radius:23px; background:var(--grad);}
+  .bars.tr{top:64px; right:-24px;}
+  .bars.bl{bottom:-130px; left:-34px; opacity:.11;}
+  .ring{position:absolute; top:40px; left:-70px; width:360px; height:360px; border-radius:50%;
+    border:2px solid var(--purple); opacity:.12;}
+
+  .topbar{position:relative; z-index:2; width:100%; text-align:center;
+    padding:calc(13px + env(safe-area-inset-top,0px)) 16px 13px;
+    background:var(--grad); font-weight:600; font-size:14.5px; color:#fff;}
+  .topbar b{font-weight:800;}
+  .wrap{position:relative; z-index:1; width:100%; max-width:440px;
+    padding:22px 18px calc(34px + env(safe-area-inset-bottom,0px));}
+  .brand{display:flex; justify-content:center; margin-bottom:14px;}
+  .brand img{height:34px; width:auto; filter:drop-shadow(0 4px 12px rgba(146,72,147,.4));}
+  .tag{display:block; text-align:center; font-family:'Montserrat',sans-serif; font-weight:800; letter-spacing:2px;
+    font-size:13px; color:var(--purpleLight); text-transform:uppercase; margin-bottom:10px;
+    animation:blink 1.15s ease-in-out infinite;}
+  h1{font-family:'Montserrat',sans-serif; font-weight:900; text-align:center; font-size:clamp(26px,7vw,33px);
+    line-height:1.08; letter-spacing:-.5px; color:var(--white); text-wrap:balance;}
+  h1 .hl{color:var(--purpleLight);}
+
+  /* Video protagonista */
+  .video{position:relative; margin:18px 0 6px; border-radius:18px; overflow:hidden; aspect-ratio:16/9;
+    border:2px solid rgba(196,123,201,.45);
+    background:radial-gradient(90% 80% at 50% 30%, #3a1c42 0%, #1a0d1f 70%), var(--carbon);
+    box-shadow:0 22px 55px rgba(0,0,0,.55), 0 0 36px rgba(146,72,147,.3);}
+  .video video{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block;}
+  .play{position:absolute; inset:0; width:100%; display:flex; align-items:center; justify-content:center;
+    background:transparent; border:none; cursor:pointer; touch-action:manipulation;
+    user-select:none; -webkit-user-select:none; -webkit-touch-callout:none;}
+  .play[hidden]{display:none;}
+  /* Mientras no haya video cargado para este material */
+  .video .portada{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block;}
+  .sinvideo{position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    text-align:center; padding:20px; font-size:13px; color:var(--inkDim); line-height:1.5;}
+  .play i{width:76px; height:76px; border-radius:50%; background:rgba(255,255,255,.16);
+    border:2px solid rgba(255,255,255,.8); display:flex; align-items:center; justify-content:center;
+    transition:transform 140ms cubic-bezier(.23,1,.32,1);}
+  .play i::after{content:''; border-left:24px solid #fff; border-top:14px solid transparent;
+    border-bottom:14px solid transparent; margin-left:6px;}
+  .play:active i{transform:scale(.94);}
+
+  .cue{text-align:center; font-family:'Montserrat',sans-serif; font-weight:800; font-size:18px; color:var(--white);
+    margin:18px 0 12px;}
+  .arrow{text-align:center; font-size:34px; line-height:1; margin:2px 0 10px; animation:bob 1.05s ease-in-out infinite;}
+  .cta{display:flex; align-items:center; justify-content:center; gap:12px; width:100%;
+    padding:17px 22px; border:none; cursor:pointer; text-decoration:none; border-radius:15px;
+    background:linear-gradient(180deg,#2ce06f,#14a94e); color:#fff; font-family:'Montserrat',sans-serif;
+    font-weight:900; font-size:21px; letter-spacing:.3px;
+    box-shadow:0 10px 26px rgba(37,211,102,.45), inset 0 1px 0 rgba(255,255,255,.3);
+    animation:pulse 1.8s ease-in-out infinite;
+    /* Mantener apretado no debe seleccionar el texto: es un control, no un párrafo */
+    user-select:none; -webkit-user-select:none; -webkit-touch-callout:none;
+    transition:transform 140ms cubic-bezier(.23,1,.32,1);}
+  .cta svg{width:26px; height:26px; flex:0 0 auto;}
+  /* El pulso NO puede animar transform: una animación le gana a una regla
+     normal, así que se quedaba con la propiedad y el :active no hacía nada
+     —el botón no respondía al dedo—. El pulso vive en la sombra; el
+     transform queda libre para el toque. */
+  .cta:active{transform:scale(.97);}
+
+  /* Sin número de WhatsApp configurado el botón no lleva a ninguna parte.
+     Antes que mandar a la gente al selector de contactos, se apaga. */
+  .cta.apagado{background:#2A1730; color:var(--inkDim); box-shadow:none;
+    animation:none; cursor:not-allowed; font-size:16px; border:1px dashed #5A3A62;}
+  .micro{text-align:center; margin-top:10px; font-size:13.5px; color:var(--inkDim);}
+  .foot{text-align:center; margin-top:20px; font-size:12.5px; color:var(--inkDim);}
+  .foot a{color:var(--purpleLight); text-decoration:none;}
+
+  @keyframes blink{0%,100%{opacity:1;} 50%{opacity:.35;}}
+  @keyframes bob{0%,100%{transform:translateY(0);} 50%{transform:translateY(8px);}}
+  @keyframes pulse{
+    0%,100%{box-shadow:0 10px 26px rgba(37,211,102,.45), 0 0 0 0 rgba(37,211,102,.5), inset 0 1px 0 rgba(255,255,255,.3);}
+    50%{box-shadow:0 14px 34px rgba(37,211,102,.6), 0 0 0 14px rgba(37,211,102,0), inset 0 1px 0 rgba(255,255,255,.3);}}
+  /* Menos movimiento: se van el pulso, la flecha y el traslado; el parpadeo queda suave */
+  @media (prefers-reduced-motion: reduce){
+    .cta,.arrow{animation:none;}
+    .tag{animation-duration:3s;}
+  }
+</style>
+</head>
+<body>
+  <div class="bg"></div>
+  <div class="deco" aria-hidden="true">
+    <div class="ring"></div>
+    <div class="bars tr"><span style="height:260px"></span><span style="height:380px"></span><span style="height:260px"></span><span style="height:180px"></span></div>
+    <div class="bars bl"><span style="height:190px"></span><span style="height:290px"></span><span style="height:190px"></span></div>
+  </div>
+
+  <div class="topbar">Llegaste desde Instagram &middot; <b>tu material est&aacute; reservado</b></div>
+
+  <main class="wrap">
+    <div class="brand"><img src="assets/contadoor-blanco.png" alt="Contadoor" width="1280" height="287" /></div>
+    <span class="tag">Material gratuito</span>
+    <h1>Tu material <span class="hl">ya est&aacute; listo</span></h1>
+
+    <div class="video" id="video">
+      <button class="play" id="play" type="button" aria-label="Reproducir el video"><i></i></button>
+    </div>
+
+    <p class="cue">Rec&iacute;belo ahora por WhatsApp</p>
+    <div class="arrow" aria-hidden="true">&#128071;</div>
+    <a class="cta" id="cta" href="#" target="_blank" rel="noopener">
+      <svg viewBox="0 0 32 32" fill="#fff" aria-hidden="true"><path d="M16 3C9.4 3 4 8.3 4 14.9c0 2.3.7 4.5 1.9 6.4L4 29l7-1.8c1.8 1 3.9 1.5 6 1.5 6.6 0 12-5.3 12-11.9S22.6 3 16 3zm0 21.6c-1.9 0-3.7-.5-5.3-1.5l-.4-.2-4.1 1.1 1.1-4-.3-.4a9.5 9.5 0 01-1.5-5.1c0-5.3 4.4-9.6 9.9-9.6s9.9 4.3 9.9 9.6-4.4 9.6-9.9 9.6zm5.4-7.2c-.3-.1-1.8-.9-2-1-.3-.1-.5-.1-.7.1-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.1-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.5-.5c.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5l-.9-2.2c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.1.2 2.1 3.3 5.1 4.6.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.1-.3-.2-.6-.3z"/></svg>
+      <span id="cta-txt">Recibir el material</span>
+    </a>
+    <p class="micro">Se abre WhatsApp con el mensaje ya escrito. Solo tienes que enviarlo.</p>
+    <p class="foot">Asesor&iacute;as Contadoor Ltda &middot; <a href="https://contadoor.cl/politica-privacidad" target="_blank" rel="noopener">Pol&iacute;tica de privacidad</a></p>
+  </main>
+
+<script>
+/* ═══ CONFIGURACIÓN (lo único que se edita) ═══════════════════════════
+   WA_NUMERO: código país + número, sin "+" ni espacios (ej. 569XXXXXXXX).
+   MATERIALES: una entrada por material, la clave es el slug de ?m=
+     titulo     → título de la pestaña del navegador
+     video      → archivo 16:9 (MP4 H.264), ej. "videos/gastos-pyme.mp4"
+     poster     → imagen de portada del video (opcional)
+     wa_mensaje → texto que aparece ya escrito en WhatsApp              */
+var WA_NUMERO = "56946754390"; // número del asistente (Asesorías Contadoor), conectado 14-oct-2026
+var MENSAJE_GENERICO = "Hola, quiero el material que vi en Instagram";
+/* VIDEO_GENERICO: el mismo video para todos los materiales (si un material trae su propio "video", manda ese).
+   Mientras no haya video, se muestra la "portada" del material (imagen 16:9). */
+var VIDEO_GENERICO = "";        // ← video genérico 16:9 (lo graba Luciano)
+var POSTER_GENERICO = "";
+/* IMPORTANTE: el wa_mensaje debe terminar con "(código: <codigo del material>)". El asistente lo reconoce y envía
+   el material solo. El código debe existir como material vigente en el conocimiento publicado (hoy: guia-sence). */
+var MATERIALES = {
+  "guia-sence": {
+    titulo: "Guía SENCE",
+    video: "",                             // vacío = usa VIDEO_GENERICO
+    poster: "",
+    portada: "assets/materiales/guia-sence-portada.jpg",   // se muestra mientras no haya video
+    wa_mensaje: "Hola, quiero la Guía SENCE (código: guia-sence)"
+  },
+  "gastos-pyme": {
+    titulo: "Gastos PYME",                 // ← CONFIRMAR
+    video: "",                             // ← falta el video
+    poster: "",
+    wa_mensaje: "Quiero el material de Gastos PYME"
+  }
+};
+
+(function(){
+  var slug = "";
+  try{
+    slug = (new URLSearchParams(location.search).get("m") || "")
+      .trim().toLowerCase().replace(/[^a-z0-9_-]/g, "").slice(0, 40);
+  }catch(e){ slug = ""; }
+  var mat = Object.prototype.hasOwnProperty.call(MATERIALES, slug) ? MATERIALES[slug] : null;
+
+  // ── Botón de WhatsApp ──────────────────────────────────────────────
+  var cta = document.getElementById("cta");
+  var msj = (mat && mat.wa_mensaje) || MENSAJE_GENERICO;
+
+  /* Sin número, "https://wa.me/?text=..." NO falla: abre el selector de
+     contactos de WhatsApp. La persona ve que algo pasó, no sabe a quién
+     escribir y se va. Se pierde el lead y la página parece sana.
+     Mejor que se note acá que allá. */
+  if(!/^\d{8,15}$/.test(String(WA_NUMERO))){
+    cta.removeAttribute("href");
+    cta.removeAttribute("target");
+    cta.setAttribute("aria-disabled", "true");
+    cta.classList.add("apagado");
+    document.getElementById("cta-txt").textContent = "Falta configurar el número de WhatsApp";
+    console.error("WA_NUMERO vacío o mal escrito: solo dígitos, con código de país y sin «+». Ej: 56979881891");
+  }else{
+    cta.href = "https://wa.me/" + WA_NUMERO + "?text=" + encodeURIComponent(msj);
+  }
+
+  if(mat && mat.titulo) document.title = mat.titulo + " · Contadoor";
+
+  // Video: sin autoplay (no gastar datos); toca → reproduce
+  var caja = document.getElementById("video");
+  var play = document.getElementById("play");
+  /* Sin video para este material: un botón de play que no hace nada se
+     ve roto. Se esconde y se dice qué falta. */
+  var videoSrc = (mat && mat.video) || VIDEO_GENERICO;
+  var posterSrc = (mat && mat.poster) || (mat && mat.video ? "" : POSTER_GENERICO);
+  if(!videoSrc){
+    play.hidden = true;
+    if(mat && mat.portada){            // sin video: la portada del material ocupa el recuadro
+      var img = document.createElement("img");
+      img.src = mat.portada; img.alt = "Portada: " + (mat.titulo || "material"); img.className = "portada";
+      caja.appendChild(img);
+      return;
+    }
+    var aviso = document.createElement("div");
+    aviso.className = "sinvideo";
+    aviso.textContent = slug
+      ? "Falta el video de «" + slug + "»"
+      : "Acá va el video · 16:9";
+    caja.appendChild(aviso);
+    return;
+  }
+  var v = document.createElement("video");
+  v.setAttribute("playsinline", ""); v.preload = "metadata"; v.src = videoSrc;
+  if(posterSrc) v.poster = posterSrc;
+  caja.insertBefore(v, play);
+  play.addEventListener("click", function(){
+    v.setAttribute("controls", ""); play.hidden = true;
+    var p = v.play(); if(p && p.catch) p.catch(function(){});
+  });
+  v.addEventListener("ended", function(){ v.removeAttribute("controls"); play.hidden = false; });
+})();
+</script>
+</body>
+</html>
