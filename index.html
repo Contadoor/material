@@ -162,8 +162,9 @@ var WA_NUMERO = "56946754390"; // número del asistente (Asesorías Contadoor), 
 var MENSAJE_GENERICO = "Hola, quiero el material que vi en Instagram";
 /* VIDEO_GENERICO: el mismo video para todos los materiales (si un material trae su propio "video", manda ese).
    Mientras no haya video, se muestra la "portada" del material (imagen 16:9). */
-var VIDEO_GENERICO = "assets/video/material.mp4";          // video genérico 16:9 (Luciano, 15-oct-2026)
-var POSTER_GENERICO = "assets/video/material-poster.jpg";
+/* ?v=… obliga al celular a bajar el video nuevo cuando se reemplaza (sin eso muestra el guardado). Cambiarlo en cada video nuevo. */
+var VIDEO_GENERICO = "assets/video/material.mp4?v=20261015-final";   // video genérico 16:9 (Luciano, 15-oct-2026)
+var POSTER_GENERICO = "assets/video/material-poster.jpg?v=20261015-final";
 /* IMPORTANTE: el wa_mensaje debe terminar con "(código: <codigo del material>)". El asistente lo reconoce y envía
    el material solo. El código debe existir como material vigente en el conocimiento publicado (hoy: guia-sence). */
 var MATERIALES = {
