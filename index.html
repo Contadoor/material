@@ -159,28 +159,28 @@
      poster     → imagen de portada del video (opcional)
      wa_mensaje → texto que aparece ya escrito en WhatsApp              */
 var WA_NUMERO = "56946754390"; // número del asistente (Asesorías Contadoor), conectado 14-oct-2026
-var MENSAJE_GENERICO = "Hola, quiero el material que vi en Instagram";
+var MENSAJE_GENERICO = "Hola Contadoor 👋 ¿Me podrías compartir el material que vi en Instagram?";
 /* VIDEO_GENERICO: el mismo video para todos los materiales (si un material trae su propio "video", manda ese).
    Mientras no haya video, se muestra la "portada" del material (imagen 16:9). */
 /* ?v=… obliga al celular a bajar el video nuevo cuando se reemplaza (sin eso muestra el guardado). Cambiarlo en cada video nuevo. */
 var VIDEO_GENERICO = "assets/video/material.mp4?v=20261015-final";   // video genérico 16:9 (Luciano, 15-oct-2026)
 var POSTER_GENERICO = "assets/video/material-poster.jpg?v=20261015-final";
-/* IMPORTANTE: el wa_mensaje debe terminar con "(código: <codigo del material>)". El asistente lo reconoce y envía
-   el material solo. El código debe existir como material vigente en el conocimiento publicado (hoy: guia-sence). */
+/* IMPORTANTE: el wa_mensaje debe nombrar el material con el MISMO nombre que tiene en el asistente (su título).
+   El asistente lo reconoce por el nombre y envía el material solo. El material debe estar vigente en el conocimiento publicado. */
 var MATERIALES = {
   "despacho": {
     titulo: "Guías de despacho",
     video: "",                             // vacío = usa VIDEO_GENERICO
     poster: "",
     portada: "assets/materiales/despacho-portada.jpg",
-    wa_mensaje: "Hola, quiero la guía de guías de despacho (código: despacho)"
+    wa_mensaje: "Hola Contadoor 👋 ¿Me podrías compartir la guía de despacho?"
   },
   "guia-sence": {
     titulo: "Guía SENCE",
     video: "",                             // vacío = usa VIDEO_GENERICO
     poster: "",
     portada: "assets/materiales/guia-sence-portada.jpg",   // se muestra mientras no haya video
-    wa_mensaje: "Hola, quiero la Guía SENCE (código: guia-sence)"
+    wa_mensaje: "Hola Contadoor 👋 ¿Me podrías compartir la Guía SENCE?"
   },
   "gastos-pyme": {
     titulo: "Gastos PYME",                 // ← CONFIRMAR
