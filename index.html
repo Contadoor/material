@@ -61,10 +61,9 @@
   h1 .hl{color:var(--purpleLight);}
 
   /* Video protagonista */
-  /* Video VERTICAL 9:16 (aprobado 15-oct): alto máximo 58% de la pantalla para que el botón quede a la vista */
-  .video{position:relative; margin:18px auto 6px; border-radius:18px; overflow:hidden; aspect-ratio:9/16;
-    height:min(58vh, calc((100vw - 36px) * 16 / 9)); max-width:100%;
-    border:2px solid rgba(196,123,201,.45);
+  /* Video HORIZONTAL 16:9 sin borde (aprobado 15-oct, versión final): se funde con el fondo, sin "cuadro sobre cuadro" */
+  .video{position:relative; margin:18px 0 6px; border-radius:18px; overflow:hidden; aspect-ratio:16/9;
+    border:0;
     background:radial-gradient(90% 80% at 50% 30%, #3a1c42 0%, #1a0d1f 70%), var(--carbon);
     box-shadow:0 22px 55px rgba(0,0,0,.55), 0 0 36px rgba(146,72,147,.3);}
   .video video{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block;}
@@ -156,14 +155,14 @@
    WA_NUMERO: código país + número, sin "+" ni espacios (ej. 569XXXXXXXX).
    MATERIALES: una entrada por material, la clave es el slug de ?m=
      titulo     → título de la pestaña del navegador
-     video      → archivo 9:16 vertical (MP4 H.264, +faststart), ej. "assets/video/gastos-pyme.mp4"
+     video      → archivo 16:9 horizontal (MP4 H.264, +faststart), ej. "assets/video/gastos-pyme.mp4"
      poster     → imagen de portada del video (opcional)
      wa_mensaje → texto que aparece ya escrito en WhatsApp              */
 var WA_NUMERO = "56946754390"; // número del asistente (Asesorías Contadoor), conectado 14-oct-2026
 var MENSAJE_GENERICO = "Hola, quiero el material que vi en Instagram";
 /* VIDEO_GENERICO: el mismo video para todos los materiales (si un material trae su propio "video", manda ese).
    Mientras no haya video, se muestra la "portada" del material (imagen 16:9). */
-var VIDEO_GENERICO = "assets/video/material.mp4";          // video genérico 9:16 (Luciano, 15-oct-2026)
+var VIDEO_GENERICO = "assets/video/material.mp4";          // video genérico 16:9 (Luciano, 15-oct-2026)
 var POSTER_GENERICO = "assets/video/material-poster.jpg";
 /* IMPORTANTE: el wa_mensaje debe terminar con "(código: <codigo del material>)". El asistente lo reconoce y envía
    el material solo. El código debe existir como material vigente en el conocimiento publicado (hoy: guia-sence). */
