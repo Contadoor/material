@@ -165,22 +165,22 @@ var MENSAJE_GENERICO = "Hola Contadoor 👋 ¿Me podrías compartir el material 
 /* ?v=… obliga al celular a bajar el video nuevo cuando se reemplaza (sin eso muestra el guardado). Cambiarlo en cada video nuevo. */
 var VIDEO_GENERICO = "assets/video/material.mp4?v=20261015-final";   // video genérico 16:9 (Luciano, 15-oct-2026)
 var POSTER_GENERICO = "assets/video/material-poster.jpg?v=20261015-final";
-/* IMPORTANTE: el wa_mensaje debe nombrar el material con el MISMO nombre que tiene en el asistente (su título).
-   El asistente lo reconoce por el nombre y envía el material solo. El material debe estar vigente en el conocimiento publicado. */
+/* IMPORTANTE: el wa_mensaje DEBE terminar en "(código: <codigo>)": el motor del asistente entrega el material SOLO por ese
+   código (asistente/motor/codigos.ts · detectarCodigo). Sin él, la IA no ve el material y responde que no existe (probado 16-oct). */
 var MATERIALES = {
   "despacho": {
     titulo: "Guías de despacho",
     video: "",                             // vacío = usa VIDEO_GENERICO
     poster: "",
     portada: "assets/materiales/despacho-portada.jpg",
-    wa_mensaje: "Hola Contadoor 👋 ¿Me podrías compartir la guía de despacho?"
+    wa_mensaje: "Hola Contadoor 👋 ¿Me podrías compartir la guía de despacho? (código: despacho)"
   },
   "guia-sence": {
     titulo: "Guía SENCE",
     video: "",                             // vacío = usa VIDEO_GENERICO
     poster: "",
     portada: "assets/materiales/guia-sence-portada.jpg",   // se muestra mientras no haya video
-    wa_mensaje: "Hola Contadoor 👋 ¿Me podrías compartir la Guía SENCE?"
+    wa_mensaje: "Hola Contadoor 👋 ¿Me podrías compartir la Guía SENCE? (código: guia-sence)"
   },
   "gastos-pyme": {
     titulo: "Gastos PYME",                 // ← CONFIRMAR
