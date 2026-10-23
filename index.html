@@ -167,6 +167,8 @@ var VIDEO_GENERICO = "assets/video/material.mp4?v=20261015-final";   // video ge
 var POSTER_GENERICO = "assets/video/material-poster.jpg?v=20261015-final";
 /* IMPORTANTE: el wa_mensaje DEBE terminar en "(código: <codigo>)": el motor del asistente entrega el material SOLO por ese
    código (asistente/motor/codigos.ts · detectarCodigo). Sin él, la IA no ve el material y responde que no existe (probado 16-oct). */
+/* ALIAS: otras formas de escribir el slug que llevan al mismo material (sin tildes, en minúsculas). */
+var ALIAS = { "regimen": "regimenes" };
 var MATERIALES = {
   "despacho": {
     titulo: "Guías de despacho",
@@ -201,8 +203,10 @@ var MATERIALES = {
   var slug = "";
   try{
     slug = (new URLSearchParams(location.search).get("m") || "")
+      .normalize("NFD").replace(/[\u0300-\u036f]/g, "")   // ?m=régimen → regimen (sin tildes)
       .trim().toLowerCase().replace(/[^a-z0-9_-]/g, "").slice(0, 40);
   }catch(e){ slug = ""; }
+  if(Object.prototype.hasOwnProperty.call(ALIAS, slug)) slug = ALIAS[slug];
   var mat = Object.prototype.hasOwnProperty.call(MATERIALES, slug) ? MATERIALES[slug] : null;
 
   // ── Botón de WhatsApp ──────────────────────────────────────────────
